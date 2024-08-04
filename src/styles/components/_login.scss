@@ -1,0 +1,26 @@
+.login {
+
+    background-image: linear-gradient(to right, $primary_color, $primary_hover);
+    height: 300px;
+
+    &__logo{
+        margin-top: -100px;
+        img{
+            width: 130px;
+            height: 130px;
+        }
+    }
+    &__card{
+        margin-top: -100px;
+        background: hsla(0, 0%, 100%, 0.8);
+        backdrop-filter: blur(40px);
+        border-radius: 0.5rem;
+    }
+    &__olvide{
+        cursor: pointer;
+        color: $primary_color;
+        &:hover{
+            color: $primary_hover;
+        }
+    }
+}

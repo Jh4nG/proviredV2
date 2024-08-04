@@ -1,0 +1,43 @@
+/* Variables */
+$primary_color: #2e58a6;
+$primary_hover: #110979;
+
+$danger_color: #d55050;
+$danger_hover: #d55050;
+
+/* Break point */
+$small: 576px;
+$medium: 768px;
+$large: 992px;
+$xlarge: 1200px;
+$xxlarge: 1400px;
+$xxxlarge: 1600px;
+$xxxxlarge: 1980px;
+
+/* clases generales */
+.btn__primary{
+    color: white !important;
+    background-color: $primary_color !important;
+
+    &:hover{
+        background-color: $primary_hover !important;
+    }
+}
+
+.btn__cancel{
+    color: white !important;
+    background-color: $danger_color !important;
+
+    &:hover{
+        background-color: $danger_hover !important;
+    }
+}
+
+/* MIXIN */
+@mixin breakPoint($size){
+    @media (min-width: $size) {
+        @content;
+    }
+}
+
+@import './components/login'
