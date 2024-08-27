@@ -1,16 +1,24 @@
 import { useFormik } from 'formik';
 import { MDBInput } from 'mdb-react-ui-kit';
+import { useState } from 'react';
+import { Loader } from '../../../components/Loader/Loader';
+import { login } from '../../../services/loginService.js';
 import * as Yup from 'yup';
+import { messageAlertGeneric } from '../../../hooks/useMessage';
+import { ModalTerminos } from './Terminos';
 
 export const FormLogin = ()=> {
 
+    const [showLoader, setShowLoader] = useState(false);
+    const [showTerminos, setShowTerminos] = useState(false);
+    const [respuesta, setRespuesta] = useState();
     const objectLogin = {
-        usuario: '',
+        user: '',
         password: ''
     }
 
     const validateFormLogin = Yup.object().shape({
-        usuario: Yup.string().required("Usuario es requerido"),
+        user: Yup.string().required("Usuario es requerido"),
         password: Yup.string().required("Contraseña es requerido"),
     });
 
@@ -18,20 +26,44 @@ export const FormLogin = ()=> {
         initialValues: objectLogin,
         validationSchema: validateFormLogin,
         onSubmit: async (values) => {
-            // logica
-            console.log('pasa form');
+            setShowLoader(true);
+            const resp = await login(values);
+            if(resp.status == 200){
+                if(resp.redirect){ // Se inicia sesión
+                    if(resp.terminos_ok != undefined && !resp.terminos_ok){ // Si no ha aceptado terminos, se muestra modal de terminos
+                        setRespuesta(resp);
+                        setShowTerminos(true);
+                        setShowLoader(false);
+                        return;
+                    }
+                    // Se hace lógica para persistencia de datos
+                    redirectHome(resp.user, resp.tipousuario);
+                }else{ // Se verifica porque no inicia sesión
+                    console.log('No pasa por redirect',resp);
+                }
+            }else{
+                messageAlertGeneric(resp);
+            }
+            setShowLoader(false);
         }
-    })
+    });
+
+    const redirectHome = (user, tipousuario) => {
+        setShowTerminos(false);
+        console.log(user,tipousuario);
+    }
     
     return (
         <>
+            {showLoader && (<Loader show={showLoader} />)}
             <form onSubmit={formLogin.handleSubmit}>
                 <h2 className="fw-bold mb-5">Inicio de sesión</h2>
-                <MDBInput wrapperClass='mb-4' label='Usuario *' id='usuario' name='usuario' onChange={formLogin.handleChange} type='text' required/>
+                <MDBInput wrapperClass='mb-4' label='Usuario *' id='user' name='user' onChange={formLogin.handleChange} type='text' required/>
 
                 <MDBInput wrapperClass='mb-4' label='Contraseña *' id='password' name='password' onChange={formLogin.handleChange} type='password' required/>
-                <button className="w-100 mb-4 form-control btn__primary">Ingresar</button>
+                <button className="w-100 mb-4 btn btn__primary">Ingresar</button>
             </form>
+            {showTerminos && <ModalTerminos show={showTerminos} setModal={setShowTerminos} parametro={respuesta} redirectHome={redirectHome} />}
         </>
     )
 }

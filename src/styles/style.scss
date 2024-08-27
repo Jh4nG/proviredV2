@@ -15,7 +15,7 @@ $xxxlarge: 1600px;
 $xxxxlarge: 1980px;
 
 /* clases generales */
-.btn__primary{
+.btn__primary, .swal2-confirm{
     color: white !important;
     background-color: $primary_color !important;
 
@@ -24,7 +24,7 @@ $xxxxlarge: 1980px;
     }
 }
 
-.btn__cancel{
+.btn__cancel, .swal2-deny, .swal2-cancel{
     color: white !important;
     background-color: $danger_color !important;
 
