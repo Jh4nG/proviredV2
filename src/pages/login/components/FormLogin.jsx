@@ -1,14 +1,19 @@
+import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import { MDBInput } from 'mdb-react-ui-kit';
 import { useState } from 'react';
 import { Loader } from '../../../components/Loader/Loader';
 import { login } from '../../../services/loginService.js';
-import * as Yup from 'yup';
 import { messageAlertGeneric } from '../../../hooks/useMessage';
 import { ModalTerminos } from './Terminos';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import { GetUserThunk } from '../../../store/auth/thunk.js';
 
 export const FormLogin = ()=> {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [showLoader, setShowLoader] = useState(false);
     const [showTerminos, setShowTerminos] = useState(false);
     const [respuesta, setRespuesta] = useState();
@@ -48,9 +53,17 @@ export const FormLogin = ()=> {
         }
     });
 
-    const redirectHome = (user, tipousuario) => {
+    const redirectHome = async (user, tipousuario) => {
         setShowTerminos(false);
-        console.log(user,tipousuario);
+        dispatch(GetUserThunk(user, tipousuario)).then(async (resp) => {
+            if(resp.status == 200){
+                navigate('/inicio');
+                setShowLoader(false);
+            }else{
+            }
+        }).finally(()=>{
+            setShowLoader(false);
+        })
     }
     
     return (

@@ -1,12 +1,15 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Login } from '../pages/login/Login';
-import { InRoutes } from './InRoutes';
+import { InRoutesS } from './InRoutesS';
+import { useSelector } from 'react-redux';
+import { InRoutesA } from './InRoutesA';
+import { InRoutesO } from './InRoutesO';
 
 export const AppRouter = ()=>{
     
-    const status = false;
+    const { status,tipousuario } = useSelector(state => state.usuarioState);
     return (
-        status === false ? (
+        status === 'logout' ? (
             <>
                 <Routes>
                     <Route path="/" element={<Login />} />
@@ -14,7 +17,17 @@ export const AppRouter = ()=>{
                 </Routes>
             </>
         ) : (
-            <InRoutes />
+            <>
+                {tipousuario === 'S' && (
+                    <InRoutesS />
+                )}
+                {tipousuario === 'A' && (
+                    <InRoutesA />
+                )}
+                {tipousuario === 'O' && (
+                    <InRoutesO />
+                )}
+            </>
         )
     )
 }
