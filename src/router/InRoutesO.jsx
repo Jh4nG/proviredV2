@@ -7,7 +7,6 @@ export const InRoutesO = ()=> {
     const userInfo = useSelector(state => state.usuarioState);
     return (
         <>
-            {console.log(userInfo)}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/*" element={<Navigate to="/" />} />

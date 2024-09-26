@@ -1,0 +1,73 @@
+.menu {
+    height: 100vh;
+    background-color: $primary_hover;
+    &_logo{
+        img {
+            width: 30%;
+            margin: 1rem;
+        }
+        h3 {
+            color: white;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+    }
+
+    &_collapse {
+        flex: 0 0 auto;
+        width: 5% !important;
+        .menu{
+            &_logo{
+                img {
+                    width: 60%;
+                }
+            }
+            &_btnCollapse{
+                margin-left: 95%;
+            }
+        }
+    }
+
+    &_btnCollapse{
+        border: none;
+        display: flex;
+        font-size: 2rem;
+        margin-left: 98%;
+        position: relative;
+        border-radius:100px;
+        color: $primary_color;
+        background-color: white;
+        z-index: 100;
+    }
+
+    ul.ant-menu {
+        width: 100%;
+        background: transparent;
+        
+        li{
+            color: white;
+            &.ant-menu-item-selected{
+                font-weight: bold;
+                background-color: $primary_color;
+            }
+            
+            &.ant-menu-submenu-selected>div.ant-menu-submenu-title {
+                color: white;
+                font-weight: bold;
+                background-color: $primary_color;
+            }
+            
+            &>div {
+                color: white;
+                &.ant-menu-submenu-selected{
+                    color: white;
+                }
+            }
+            
+            &.ant-menu-submenu-title:hover, &.ant-menu-item:hover {
+                color: white !important;
+                font-weight: bold;
+            }
+        }
+    }
+}

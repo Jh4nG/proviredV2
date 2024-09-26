@@ -1,0 +1,31 @@
+.contain {
+    & div>.ant-space-compact-block {
+        justify-content: end !important;
+    }
+    &_collapse{
+        width: 95% !important;
+
+    }
+    &_header {
+        display: flex;
+        background: #fff;
+        box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 0.25rem;
+        height: 60px;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 1.75rem;
+    }
+
+    &_body {
+        margin: 2.5rem;
+        max-height: 75vh;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 0.25rem;
+    }
+
+    &_footer {
+        bottom: 0%;
+        width: inherit;
+        position: absolute;
+    }
+}

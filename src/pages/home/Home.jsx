@@ -1,17 +1,112 @@
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 import { logout } from "../../store/auth/authSlice";
+import React, { useState } from "react";
+import { MenuComponent } from "../../components/Menu";
+import {
+  AppstoreOutlined,
+  ContainerOutlined,
+  DesktopOutlined,
+  MailOutlined,
+  PieChartOutlined
+} from "@ant-design/icons";
+import { HeaderComponent } from "./components/Header";
+import { BodyComponent } from "./components/Body";
+import { FooterComponent } from "./components/Footer";
 
 export const Home = () => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const closeSession = () => {
+    dispatch(logout());
+  };
 
-    const closeSession = () => {
-        dispatch(logout());
-    }
-    return(
-        <>
-            Bienvenido!!!
-            <button onClick={closeSession}>Cerrar</button>
-        </>
-    )
-}
+  const items = [ 
+    {
+      key: "1",
+      icon: <PieChartOutlined />,
+      label: "Option 1",
+    },
+    {
+      key: "2",
+      icon: <DesktopOutlined />,
+      label: "Option 2",
+    },
+    {
+      key: "3",
+      icon: <ContainerOutlined />,
+      label: "Option 3",
+    },
+    {
+      key: "sub1",
+      label: "Navigation One",
+      icon: <MailOutlined />,
+      children: [
+        {
+          key: "5",
+          label: "Option 5",
+        },
+        {
+          key: "6",
+          label: "Option 6",
+        },
+        {
+          key: "7",
+          label: "Option 7",
+        },
+        {
+          key: "8",
+          label: "Option 8",
+        },
+      ],
+    },
+    {
+      key: "sub2",
+      label: "Navigation Two",
+      icon: <AppstoreOutlined />,
+      children: [
+        {
+          key: "9",
+          label: "Option 9",
+        },
+        {
+          key: "10",
+          label: "Option 10",
+        },
+        {
+          key: "sub3",
+          label: "Submenu",
+          children: [
+            {
+              key: "11",
+              label: "Option 11",
+            },
+            {
+              key: "12",
+              label: "Option 12",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const [collapsed, setCollapsed] = useState(false);
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  return (
+      <div className="row" style={{width:"100%"}}>
+        <MenuComponent 
+          items={items}
+          collapsed={collapsed}
+          toggleCollapsed={toggleCollapsed}
+        />
+        <div className={`contain col-sm-8 col-md-8 col-lg-9 col-xl-10 p-0 m-0 ${collapsed && 'contain_collapse'}`}>
+          <HeaderComponent />
+          <BodyComponent />
+          <FooterComponent />
+        </div>
+      </div>
+  );
+};
