@@ -3,8 +3,11 @@
     background-color: $primary_hover;
     &_logo{
         img {
-            width: 30%;
+            width: 10%;
             margin: 1rem;
+            @include breakPoint($small){
+                width: 30%;
+            }
         }
         h3 {
             color: white;
@@ -15,7 +18,7 @@
 
     &_collapse {
         flex: 0 0 auto;
-        width: 5% !important;
+        width: 15% !important;
         .menu{
             &_logo{
                 img {
@@ -25,6 +28,15 @@
             &_btnCollapse{
                 margin-left: 95%;
             }
+        }
+        @include breakPoint($medium){
+            width: 10% !important;
+        }
+        @include breakPoint($large){
+            width: 7% !important;
+        }
+        @include breakPoint($xlarge){
+            width: 5% !important;
         }
     }
 
@@ -38,6 +50,21 @@
         color: $primary_color;
         background-color: white;
         z-index: 100;
+    }
+
+    &_mobile {
+        height: 50vh;
+        overflow: auto;
+    }
+
+    &_collapseMobile {
+        height: 8%;
+    }
+
+    &_btnMobile {
+        color : white;
+        border: none;
+        background-color: transparent;
     }
 
     ul.ant-menu {

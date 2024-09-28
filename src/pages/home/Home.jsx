@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux";
-import { logout } from "../../store/auth/authSlice";
 import React, { useState } from "react";
 import { MenuComponent } from "../../components/Menu";
 import {
@@ -14,12 +12,6 @@ import { BodyComponent } from "./components/Body";
 import { FooterComponent } from "./components/Footer";
 
 export const Home = () => {
-  const dispatch = useDispatch();
-
-  const closeSession = () => {
-    dispatch(logout());
-  };
-
   const items = [ 
     {
       key: "1",
@@ -96,7 +88,7 @@ export const Home = () => {
   };
 
   return (
-      <div className="row" style={{width:"100%"}}>
+      <div className="row home">
         <MenuComponent 
           items={items}
           collapsed={collapsed}

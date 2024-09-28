@@ -1,31 +1,48 @@
 .contain {
     & div>.ant-space-compact-block {
-        justify-content: end !important;
+        justify-content: center;
+        @include breakPoint($small){
+            justify-content: end !important;
+        }
     }
     &_collapse{
-        width: 95% !important;
-
+        width: 85% !important;
+        @include breakPoint($medium){
+            width: 90% !important;
+        }
+        @include breakPoint($large){
+            width: 93% !important;
+        }
+        @include breakPoint($xlarge){
+            width: 95% !important;
+        }
     }
     &_header {
         display: flex;
         background: #fff;
         box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 0.25rem;
         height: 60px;
-        justify-content: flex-end;
         align-items: center;
         padding: 0 1.75rem;
     }
 
     &_body {
-        margin: 2.5rem;
+        margin: 1.5rem;
         max-height: 75vh;
         border-radius: 5px;
         box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 0.25rem;
+
+        @include breakPoint($small){
+            margin: 2.5rem;
+        }
     }
 
     &_footer {
-        bottom: 0%;
-        width: inherit;
-        position: absolute;
+        bottom:auto;
+        @include breakPoint($small){
+            width: inherit;
+            bottom:0%;
+            position: absolute;
+        }
     }
 }

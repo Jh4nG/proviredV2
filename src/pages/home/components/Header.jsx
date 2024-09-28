@@ -1,27 +1,35 @@
 import React from 'react';
 import { UserOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Dropdown, message } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../store/auth/authSlice';
 
 export const HeaderComponent = () => {
+    const dispatch = useDispatch();
     const userInfo = useSelector(state => state.usuarioState);
     const items = [
         {
           label: 'Modificar contraseña',
-          key: '1',
+          key: 'modifyUser',
           icon: <EditOutlined />,
         },
         {
           label: 'Cerrar sesión',
-          key: '2',
+          key: 'logout',
           icon: <LogoutOutlined />,
           danger: true,
         }
     ];
+
+    const handleCloseSession = ()=> {
+        dispatch(logout());
+    }
     
     const handleMenuClick = (e) => {
-        message.info('Click on menu item.');
-        console.log('click', e);
+        switch(e.key){
+            case 'logout' : handleCloseSession(); return;
+            case 'modifyUser' : message.info('click modificar usuario'); return;
+        }
     };
     
     const menuProps = {

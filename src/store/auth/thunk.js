@@ -7,7 +7,6 @@ export const GetUserThunk = (user, tipousuario) => {
         try{
             const resp = await getUsuario(user, tipousuario);
             if(resp.status == 200){
-                debugger
                 await dispatch(obtenerUsuario(resp));
                 return resp;
             }else{

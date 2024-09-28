@@ -1,0 +1,7 @@
+.home {
+    width: auto;
+
+    @include breakPoint($small){
+        width: 100%;
+    }
+}
