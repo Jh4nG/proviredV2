@@ -33,13 +33,13 @@ export const HeaderComponent = () => {
     };
     
     const menuProps = {
-        items,
+        items : (userInfo.tipousuario == 'O') ? items.slice(1,2) : items,
         onClick: handleMenuClick,
     };
     return (
         <div className="contain_header">
             <Dropdown.Button menu={menuProps} placement="bottom" icon={<UserOutlined />}>
-                {userInfo.nombre}
+                {userInfo.data.nombre}
             </Dropdown.Button>
         </div>
     )

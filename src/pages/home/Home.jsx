@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuComponent } from "../../components/Menu";
 import {
   AppstoreOutlined,
@@ -10,13 +10,18 @@ import {
 import { HeaderComponent } from "./components/Header";
 import { BodyComponent } from "./components/Body";
 import { FooterComponent } from "./components/Footer";
+import useTimeOutSession from "../../hooks/useTimeOutSession";
 
-export const Home = () => {
+export const Home = ({
+  timeLogOut,
+  menu = null
+}) => {
   const items = [ 
     {
       key: "1",
       icon: <PieChartOutlined />,
       label: "Option 1",
+      disabled : true
     },
     {
       key: "2",
@@ -82,15 +87,22 @@ export const Home = () => {
     },
   ];
 
+  const { state } = useTimeOutSession();
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
+  useEffect(()=>{
+    if(state){
+      timeLogOut();
+    }
+  },[state])
+  
   return (
       <div className="row home">
         <MenuComponent 
-          items={items}
+          items={menu ? menu : items}
           collapsed={collapsed}
           toggleCollapsed={toggleCollapsed}
         />

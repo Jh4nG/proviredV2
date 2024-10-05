@@ -6,9 +6,10 @@ import { Loader } from '../../../components/Loader/Loader';
 import { login } from '../../../services/loginService.js';
 import { messageAlertGeneric } from '../../../hooks/useMessage';
 import { ModalTerminos } from './Terminos';
-import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { GetUserThunk } from '../../../store/auth/thunk.js';
+import * as Yup from 'yup';
+import { setToken } from '../../../store/auth/authSlice.js';
 
 export const FormLogin = ()=> {
 
@@ -42,7 +43,7 @@ export const FormLogin = ()=> {
                         return;
                     }
                     // Se hace lógica para persistencia de datos
-                    redirectHome(resp.user, resp.tipousuario);
+                    redirectHome(resp.user, resp.tipousuario, resp.token);
                 }else{ // Se verifica porque no inicia sesión
                     console.log('No pasa por redirect',resp);
                 }
@@ -53,13 +54,13 @@ export const FormLogin = ()=> {
         }
     });
 
-    const redirectHome = async (user, tipousuario) => {
+    const redirectHome = async (user, tipousuario, token) => {
         setShowTerminos(false);
+        dispatch(setToken(token));
         dispatch(GetUserThunk(user, tipousuario)).then(async (resp) => {
-            if(resp.status == 200){
+            if(resp?.status == 200){
                 navigate('/inicio');
                 setShowLoader(false);
-            }else{
             }
         }).finally(()=>{
             setShowLoader(false);

@@ -6,13 +6,20 @@ import {
 import { Menu } from "antd";
 import logoProvired from "../../assets/images/logo_provired.webp";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
   const [showMobile, setShowMobile] = useState(false);
+  const navigate = useNavigate()
 
   const handleShowMobile = ()=> {
     setShowMobile(!showMobile);
   }
+
+  const handleRoute = (e)=> {
+    navigate(e.key);
+  }
+
   return (
     <>
         <div
@@ -28,6 +35,7 @@ export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
               {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
           </button>
           <Menu
+              onClick={handleRoute}
               defaultSelectedKeys={["1"]}
               mode="vertical"
               theme="light"
@@ -46,6 +54,7 @@ export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
           </div>
           <div className={`${!showMobile && 'd-none'}`}>
             <Menu
+                onClick={handleRoute}
                 defaultSelectedKeys={["1"]}
                 mode="inline"
                 theme="light"

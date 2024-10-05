@@ -17,7 +17,7 @@ export const ModalTerminos = ({show, setModal, parametro, redirectHome}) => {
                     <textarea className="w-100" name="terminosText" id="terminosText" readOnly style={{ height: '50vh'}} defaultValue={parametro.msg} />
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn__primary" onClick={()=>redirectHome(parametro.user, parametro.tipousuario)}>Aceptar</button>
+                    <button className="btn btn__primary" onClick={()=>redirectHome(parametro.user, parametro.tipousuario, parametro.token)}>Aceptar</button>
                     <button className="btn btn__cancel" onClick={()=>setModal(false)}>No acepto</button>
                 </ModalFooter>
             </Modal>

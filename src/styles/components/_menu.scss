@@ -95,6 +95,9 @@
                 color: white !important;
                 font-weight: bold;
             }
+            &.ant-menu-item-disabled{
+                display: none;
+            }
         }
     }
 }
