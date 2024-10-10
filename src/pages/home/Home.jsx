@@ -14,7 +14,8 @@ import useTimeOutSession from "../../hooks/useTimeOutSession";
 
 export const Home = ({
   timeLogOut,
-  menu = null
+  menu = null,
+  defaultKeyMenu={defaultKeyMenu}
 }) => {
   const items = [ 
     {
@@ -104,6 +105,7 @@ export const Home = ({
         <MenuComponent 
           items={menu ? menu : items}
           collapsed={collapsed}
+          defaultKeyMenu={defaultKeyMenu}
           toggleCollapsed={toggleCollapsed}
         />
         <div className={`contain col-sm-8 col-md-8 col-lg-9 col-xl-10 p-0 m-0 ${collapsed && 'contain_collapse'}`}>

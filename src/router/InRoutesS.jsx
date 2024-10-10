@@ -11,12 +11,14 @@ import { ReporteAbogadoComponent } from "../pages/Sucriptor/Notificaciones/Repor
 export const InRoutesS = ({timeLogOut})=> {
     const userInfo = useSelector(state => state.usuarioState);
     const [menuItems, setMenuItems] = useState([]);
+    const defaultKeyMenu = "/mis-audiencias";
     const items = [ 
         {
           key: "/mis-audiencias",
           icon: <UnorderedListOutlined />,
           label: "MIS AUDIENCIAS Y VENCIMIENTOS",
-          active: 1
+          active: 1,
+          route : <Route key="mis-audiencias" path="mis-audiencias" element={<AudienciasComponent />}/>
         },
         {
             key: "notificaciones",
@@ -26,13 +28,15 @@ export const InRoutesS = ({timeLogOut})=> {
                 {
                     key: "/reporte-notificaciones",
                     label: "Reporte Notificaciones",
-                    // active : (userInfo.data.misprocesos == '1') ? userInfo.data.misprocesos : userInfo.data.misprocesosauto,
-                    active : 1,
+                    active : (userInfo.data.misprocesos == '1') ? userInfo.data.misprocesos : userInfo.data.misprocesosauto,
+                    // active : 1,
+                    route : <Route key="reporte-notificaciones" path="reporte-notificaciones" element={<ReporteNotificacionesComponent />}/>
                 },
                 {
                     key: "/reporte-notificaciones-abogado",
                     label: "Reporte por abogado",
                     active : (userInfo.data.group_users != userInfo.data.parent) ? 1 : 0,
+                    route : <Route key="reporte-notificaciones-abogado" path="reporte-notificaciones-abogado" element={<ReporteAbogadoComponent />}/>
                 },
             ]
         },
@@ -100,23 +104,34 @@ export const InRoutesS = ({timeLogOut})=> {
         informe_procesal: userInfo.data.informe_procesal,
     }
 
+    const traverseRouter = (items) => {
+        // Filtramos los elementos que tienen active igual a 1
+        return items.reduce((acc, item) => {
+            if (item.active === 1) {
+                // Si el item es activo, lo agregamos
+                acc.push(item?.route);
+            } else if (item.children) {
+                // Si tiene hijos, los procesamos recursivamente
+                const filteredChildren = traverseRouter(item.children);
+                if (filteredChildren.length > 0) {
+                    // Solo añadimos el padre si tiene hijos activos
+                    for(let i = 0; i<filteredChildren.length; i++){
+                        acc.push(filteredChildren[i]);
+                    }
+                }
+            }
+            return acc;
+        }, []);
+    };
     useEffect(()=>{
         setMenuItems(traverseMenu(items));
     }, [])
     return (
         <>
             <Routes>
-                <Route path="/*" element={<Navigate to="/" />} />
-                <Route path="/" element={<Home timeLogOut={timeLogOut} menu={menuItems}/>}>
-                    {items.find(e => e.key == '/mis-audiencias').active && (
-                        <Route path="mis-audiencias" element={<AudienciasComponent />}/>
-                    )}
-                    {items[1].children.find(e => e.key == '/reporte-notificaciones').active && (
-                        <Route path="reporte-notificaciones" element={<ReporteNotificacionesComponent />}/>
-                    )}
-                    {items[1].children.find(e => e.key == '/reporte-notificaciones-abogado').active && (
-                        <Route path="reporte-notificaciones-abogado" element={<ReporteAbogadoComponent />}/>
-                    )}
+                <Route path="/*" element={<Navigate to={defaultKeyMenu} />} />
+                <Route path="/" element={<Home timeLogOut={timeLogOut} menu={menuItems} defaultKeyMenu={defaultKeyMenu} />}>
+                    {traverseRouter(items)}
                 </Route>
             </Routes>
         </>

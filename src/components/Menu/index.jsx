@@ -8,7 +8,7 @@ import logoProvired from "../../assets/images/logo_provired.webp";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
+export const MenuComponent = ({ items, collapsed, defaultKeyMenu = [0], toggleCollapsed }) => {
   const [showMobile, setShowMobile] = useState(false);
   const navigate = useNavigate()
 
@@ -36,7 +36,7 @@ export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
           </button>
           <Menu
               onClick={handleRoute}
-              defaultSelectedKeys={["1"]}
+              defaultSelectedKeys={defaultKeyMenu}
               mode="vertical"
               theme="light"
               inlineCollapsed={collapsed}
@@ -58,7 +58,7 @@ export const MenuComponent = ({ items, collapsed, toggleCollapsed }) => {
                 defaultSelectedKeys={["1"]}
                 mode="inline"
                 theme="light"
-                inlineCollapsed={false}
+                inlineCollapsed={false} 
                 items={items}
             />
           </div>
