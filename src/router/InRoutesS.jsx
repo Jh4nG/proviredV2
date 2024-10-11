@@ -3,10 +3,10 @@ import { Home } from "../pages/home/Home"
 import { useSelector } from "react-redux";
 import { UnorderedListOutlined, AlertOutlined, StockOutlined, DiffOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { traverseMenu } from "../hooks/useMenu";
-import { AudienciasComponent } from "../pages/Sucriptor/Audiencias/Audiencias";
-import { ReporteNotificacionesComponent } from "../pages/Sucriptor/Notificaciones/ReporteNotificaciones/ReporteNotificaciones";
-import { ReporteAbogadoComponent } from "../pages/Sucriptor/Notificaciones/ReporteAbogado/ReporteAbogado";
+import { traverseMenu, traverseRouter } from "../hooks/useMenu";
+import { AudienciasComponent } from "../pages/Suscriptor/Audiencias/Audiencias";
+import { ReporteNotificacionesComponent } from "../pages/Suscriptor/Notificaciones/ReporteNotificaciones/ReporteNotificaciones";
+import { ReporteAbogadoComponent } from "../pages/Suscriptor/Notificaciones/ReporteAbogado/ReporteAbogado";
 
 export const InRoutesS = ({timeLogOut})=> {
     const userInfo = useSelector(state => state.usuarioState);
@@ -104,25 +104,6 @@ export const InRoutesS = ({timeLogOut})=> {
         informe_procesal: userInfo.data.informe_procesal,
     }
 
-    const traverseRouter = (items) => {
-        // Filtramos los elementos que tienen active igual a 1
-        return items.reduce((acc, item) => {
-            if (item.active === 1) {
-                // Si el item es activo, lo agregamos
-                acc.push(item?.route);
-            } else if (item.children) {
-                // Si tiene hijos, los procesamos recursivamente
-                const filteredChildren = traverseRouter(item.children);
-                if (filteredChildren.length > 0) {
-                    // Solo añadimos el padre si tiene hijos activos
-                    for(let i = 0; i<filteredChildren.length; i++){
-                        acc.push(filteredChildren[i]);
-                    }
-                }
-            }
-            return acc;
-        }, []);
-    };
     useEffect(()=>{
         setMenuItems(traverseMenu(items));
     }, [])
