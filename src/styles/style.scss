@@ -5,6 +5,8 @@ $primary_hover: #110979;
 $danger_color: #d55050;
 $danger_hover: #d55050;
 
+$color_table_head : #6D84A3;
+
 /* Break point */
 $small: 576px;
 $medium: 768px;
@@ -44,3 +46,5 @@ $xxxxlarge: 1980px;
 @import './components/home';
 @import './components/menu';
 @import './components/contain';
+@import './components/table';
+@import './components/form';

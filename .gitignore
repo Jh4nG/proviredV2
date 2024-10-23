@@ -25,3 +25,6 @@ dist-ssr
 
 # Ignorar las variables de entorno
 .env*
+
+# Ignore config deploy
+*.lib.answers.json

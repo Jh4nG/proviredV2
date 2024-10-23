@@ -35,3 +35,20 @@ export const traverseRouter = (items) => {
         return acc;
     }, []);
 };
+
+export const buscarPorKey = (data, keyBuscado) => {
+    for (const item of data) {
+        if (item.key === keyBuscado) {
+            return item; // Devuelve el objeto si la clave coincide
+        }
+        
+        // Si hay children, busca recursivamente en ellos
+        if (item.children) {
+            const resultado = buscarPorKey(item.children, keyBuscado);
+            if (resultado) {
+                return resultado; // Devuelve el resultado encontrado en children
+            }
+        }
+    }
+    return null; // Devuelve null si no se encuentra el objeto
+}
