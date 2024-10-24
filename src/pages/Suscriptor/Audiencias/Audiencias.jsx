@@ -1,13 +1,5 @@
-import {
-    Alert,
-    Button,
-    DatePicker,
-    Form,
-    Popconfirm,
-    Space,
-    Table,
-    Tag,
-} from "antd";
+import { Alert, Button, Popconfirm, Table } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { obtenerAudiencias } from "../../../services/audiencias";
@@ -24,20 +16,38 @@ export const AudienciasComponent = () => {
     const [msgAudiencias, setMsgAudiencias] = useState("");
     const columns = [
         {
-            title: "Detalle",
-            dataIndex: "detalle",
-            key: "detalle",
+            title: "Eliminar",
+            dataIndex: "eliminar",
+            key: "eliminar",
             headerColor: "#6D84A3",
+            align: "center",
             render: (_, record) =>
                 audiencias.length >= 1 ? (
                     <Popconfirm
-                        title="Sure to delete?"
-                        onConfirm={() =>
-                            handleViewDetail(record.id_vencimiento)
-                        }
+                        title="Está segur@ de eliminar este registro?"
+                        onConfirm={() => handleDelete(record.id_vencimiento)}
+                        okText="Confirmar"
+                        cancelText="Cancelar"
                     >
-                        <a>Ver detalle</a>
+                        <DeleteOutlined
+                            style={{ fontSize: "16px", color: "red" }}
+                        />
                     </Popconfirm>
+                ) : null,
+        },
+        {
+            title: "Editar",
+            dataIndex: "editar",
+            key: "editar",
+            headerColor: "#6D84A3",
+            align: "center",
+            render: (_, record) =>
+                audiencias.length >= 1 ? (
+                    <a onClick={handleEdit}>
+                        <EditOutlined
+                            style={{ fontSize: "16px", color: "orange" }}
+                        />
+                    </a>
                 ) : null,
         },
         {
@@ -50,6 +60,34 @@ export const AudienciasComponent = () => {
             title: "Despacho",
             dataIndex: "nameDespacho",
             key: "nameDespacho",
+            width: 150,
+        },
+        {
+            title: "Radicacion",
+            dataIndex: "radicacion",
+            key: "radicacion",
+        },
+        {
+            title: "Proceso",
+            dataIndex: "proceso",
+            key: "proceso",
+        },
+        {
+            title: "Demandante",
+            dataIndex: "demandante",
+            key: "demandante",
+            width: 200,
+        },
+        {
+            title: "Demandado",
+            dataIndex: "demandado",
+            key: "demandado",
+            width: 200,
+        },
+        {
+            title: "Descripción de vencimiento",
+            dataIndex: "descripcion_vence_terminos",
+            key: "descripcion_vence_terminos",
         },
         {
             title: "Fecha",
@@ -82,8 +120,12 @@ export const AudienciasComponent = () => {
         },
     });
 
-    const handleViewDetail = (key) => {
+    const handleDelete = (key) => {
         console.log(key);
+    };
+
+    const handleEdit = (id) => {
+        console.log(id);
     };
 
     return (
@@ -129,6 +171,7 @@ export const AudienciasComponent = () => {
                                 headerColor="#6D84A3"
                                 columns={columns}
                                 dataSource={audiencias}
+                                size="small"
                                 bordered
                             />
                         </>

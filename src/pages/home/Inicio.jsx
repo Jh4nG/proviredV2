@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export const Inicio = () => {
     const userInfo = useSelector((state) => state.usuarioState);
+    const { user } = userInfo;
     const [audiencias, setAudiencias] = useState([]);
     const columns = [
         {
