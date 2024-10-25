@@ -27,3 +27,16 @@ export const obtenerAudiencias = async (dataSend) => {
         return err;
     }
 }
+
+export const eliminarAudiencia = async (dataSend) => {
+    try{
+        const data = {
+            "controller" : "Audiencias",
+            "method" : "deleteAudiencias",
+            "params" : dataSend
+        }
+        return await postPeticionAuth(data);
+    }catch(err){
+        return err;
+    }
+}

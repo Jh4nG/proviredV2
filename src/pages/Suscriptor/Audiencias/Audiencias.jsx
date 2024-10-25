@@ -1,10 +1,18 @@
-import { Alert, Button, Popconfirm, Table } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import React from "react";
+import { Alert, Table, notification } from "antd";
+import { FileExcelOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { obtenerAudiencias } from "../../../services/audiencias";
+import {
+    eliminarAudiencia,
+    obtenerAudiencias,
+} from "../../../services/audiencias";
+import { IconDelete, IconEdit } from "../../../components/Icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+const Context = React.createContext({
+    name: "Default",
+});
 
 export const AudienciasComponent = () => {
     const today = new Date();
@@ -14,40 +22,45 @@ export const AudienciasComponent = () => {
     const { user } = useSelector((state) => state.usuarioState);
     const [audiencias, setAudiencias] = useState(null);
     const [msgAudiencias, setMsgAudiencias] = useState("");
+    const [api, contextHolder] = notification.useNotification();
+    const openNotification = (type, placement, text) => {
+        api[type]({
+            message:
+                type == "success"
+                    ? "Éxito"
+                    : type == "warining"
+                    ? "Advertencia"
+                    : type == "info"
+                    ? "Información"
+                    : "Error",
+            description: (
+                <Context.Consumer>{({ name }) => text}</Context.Consumer>
+            ),
+            placement,
+            showProgress: true,
+            pauseOnHover: true,
+        });
+    };
     const columns = [
         {
-            title: "Eliminar",
+            title: "Acciones",
             dataIndex: "eliminar",
             key: "eliminar",
             headerColor: "#6D84A3",
+            fixed: "left",
             align: "center",
             render: (_, record) =>
                 audiencias.length >= 1 ? (
-                    <Popconfirm
-                        title="Está segur@ de eliminar este registro?"
-                        onConfirm={() => handleDelete(record.id_vencimiento)}
-                        okText="Confirmar"
-                        cancelText="Cancelar"
-                    >
-                        <DeleteOutlined
-                            style={{ fontSize: "16px", color: "red" }}
+                    <>
+                        <IconDelete
+                            data={record.id_vencimiento}
+                            handleAction={handleDelete}
                         />
-                    </Popconfirm>
-                ) : null,
-        },
-        {
-            title: "Editar",
-            dataIndex: "editar",
-            key: "editar",
-            headerColor: "#6D84A3",
-            align: "center",
-            render: (_, record) =>
-                audiencias.length >= 1 ? (
-                    <a onClick={handleEdit}>
-                        <EditOutlined
-                            style={{ fontSize: "16px", color: "orange" }}
+                        <IconEdit
+                            data={record.id_vencimiento}
+                            handleAction={handleEdit}
                         />
-                    </a>
+                    </>
                 ) : null,
         },
         {
@@ -71,6 +84,7 @@ export const AudienciasComponent = () => {
             title: "Proceso",
             dataIndex: "proceso",
             key: "proceso",
+            width: 150,
         },
         {
             title: "Demandante",
@@ -120,8 +134,20 @@ export const AudienciasComponent = () => {
         },
     });
 
-    const handleDelete = (key) => {
-        console.log(key);
+    const handleDelete = async (key) => {
+        try {
+            const data = {
+                username: user,
+                id_vencimiento: key,
+            };
+            const resp = await eliminarAudiencia(data);
+            if (resp.status == 200) {
+                form.handleSubmit();
+                openNotification("success", "bottomRight", resp.msg);
+            } else if (resp.status == 400) {
+                openNotification("error", "bottomRight", resp.msg);
+            }
+        } catch (error) {}
     };
 
     const handleEdit = (id) => {
@@ -130,6 +156,7 @@ export const AudienciasComponent = () => {
 
     return (
         <div className="col-12 justify-content">
+            {contextHolder}
             <form className="row" onSubmit={form.handleSubmit}>
                 <div className="col-12 col-md-6 form-group">
                     <label className="fw-bold">Desde:</label>
@@ -156,7 +183,7 @@ export const AudienciasComponent = () => {
                     />
                 </div>
                 <div className="col-12 text-end form-group mt-3">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn__primary">
                         Consultar
                     </button>
                 </div>
@@ -166,12 +193,25 @@ export const AudienciasComponent = () => {
                 {audiencias &&
                     (audiencias?.length > 0 ? (
                         <>
+                            <div className="row">
+                                <p className="col-12 col-md-10">
+                                    Total Registros Consultados:{" "}
+                                    {audiencias.length}
+                                </p>
+                                <button className="btn btn__excel col-12 col-md-2 mb-2">
+                                    <FileExcelOutlined /> Exportar excel
+                                </button>
+                            </div>
                             <Table
                                 className="h-100 d-inline-block"
                                 headerColor="#6D84A3"
                                 columns={columns}
                                 dataSource={audiencias}
                                 size="small"
+                                pagination={{
+                                    current: 1,
+                                    pageSize: 20,
+                                }}
                                 bordered
                             />
                         </>

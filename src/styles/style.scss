@@ -35,6 +35,14 @@ $xxxxlarge: 1980px;
     }
 }
 
+.btn__excel {
+    color: green !important;
+    border: 1px !important;
+    border-style: solid !important;
+    border-color: green !important;
+    box-shadow: 0 4px 9px -4px green !important;
+}
+
 /* MIXIN */
 @mixin breakPoint($size){
     @media (min-width: $size) {
