@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { Home } from "../pages/home/Home";
 import { useSelector } from "react-redux";
 import {
@@ -9,7 +9,7 @@ import {
     MailOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { traverseMenu, traverseRouter } from "../hooks/useMenu";
+import { buscarPorKey, traverseMenu, traverseRouter } from "../hooks/useMenu";
 import { AudienciasComponent } from "../pages/Suscriptor/Audiencias/Audiencias";
 import { ReporteNotificacionesComponent } from "../pages/Suscriptor/Notificaciones/ReporteNotificaciones/ReporteNotificaciones";
 import { ReporteAbogadoComponent } from "../pages/Suscriptor/Notificaciones/ReporteAbogado/ReporteAbogado";
@@ -17,6 +17,7 @@ import { Inicio } from "../pages/home/Inicio";
 
 export const InRoutesS = ({ timeLogOut }) => {
     const userInfo = useSelector((state) => state.usuarioState);
+    const navigate = useNavigate();
     const [menuItems, setMenuItems] = useState([]);
     const defaultKeyMenu =
         window.location.pathname == "/" || window.location.pathname == "/inicio"
@@ -140,11 +141,16 @@ export const InRoutesS = ({ timeLogOut }) => {
 
     useEffect(() => {
         setMenuItems(traverseMenu(items));
+        if (
+            window.location.pathname == "/" ||
+            buscarPorKey(traverseMenu(items), window.location.pathname) == null
+        ) {
+            navigate("/inicio");
+        }
     }, []);
     return (
         <>
             <Routes>
-                <Route path="/*" element={<Navigate to={defaultKeyMenu} />} />
                 <Route
                     path="/"
                     element={
@@ -155,8 +161,12 @@ export const InRoutesS = ({ timeLogOut }) => {
                         />
                     }
                 >
-                    <Route path="inicio" element={<Inicio />} />
                     {traverseRouter(items)}
+                    <Route path="inicio" element={<Inicio />} />
+                    <Route
+                        path="/*"
+                        element={<Navigate to={defaultKeyMenu} />}
+                    />
                 </Route>
             </Routes>
         </>

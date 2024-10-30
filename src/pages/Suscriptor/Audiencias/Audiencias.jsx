@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Table, notification } from "antd";
+import { Alert, Table } from "antd";
 import { FileExcelOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,11 +8,10 @@ import {
     obtenerAudiencias,
 } from "../../../services/audiencias";
 import { IconDelete, IconEdit } from "../../../components/Icons";
+import { NotificationComponent } from "../../../components/Notification/Notification";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-const Context = React.createContext({
-    name: "Default",
-});
+import { EditAudiencia } from "./Components/Edit";
 
 export const AudienciasComponent = () => {
     const today = new Date();
@@ -21,26 +20,14 @@ export const AudienciasComponent = () => {
     const date = today.getDate();
     const { user } = useSelector((state) => state.usuarioState);
     const [audiencias, setAudiencias] = useState(null);
+    const [showEdit, setShowEdit] = useState(false);
     const [msgAudiencias, setMsgAudiencias] = useState("");
-    const [api, contextHolder] = notification.useNotification();
-    const openNotification = (type, placement, text) => {
-        api[type]({
-            message:
-                type == "success"
-                    ? "Éxito"
-                    : type == "warining"
-                    ? "Advertencia"
-                    : type == "info"
-                    ? "Información"
-                    : "Error",
-            description: (
-                <Context.Consumer>{({ name }) => text}</Context.Consumer>
-            ),
-            placement,
-            showProgress: true,
-            pauseOnHover: true,
-        });
-    };
+    const [notification, setNotification] = useState({
+        type: "",
+        placement: "",
+        text: "",
+    });
+
     const columns = [
         {
             title: "Acciones",
@@ -143,20 +130,30 @@ export const AudienciasComponent = () => {
             const resp = await eliminarAudiencia(data);
             if (resp.status == 200) {
                 form.handleSubmit();
-                openNotification("success", "bottomRight", resp.msg);
+                setNotification({
+                    type: "success",
+                    placement: "bottomRight",
+                    text: resp.msg,
+                });
             } else if (resp.status == 400) {
-                openNotification("error", "bottomRight", resp.msg);
+                setNotification({
+                    type: "error",
+                    placement: "bottomRight",
+                    text: resp.msg,
+                });
             }
         } catch (error) {}
     };
 
     const handleEdit = (id) => {
         console.log(id);
+        setShowEdit(true);
     };
 
     return (
         <div className="col-12 justify-content">
-            {contextHolder}
+            <EditAudiencia show={showEdit} setShow={setShowEdit} />
+            <NotificationComponent resp={notification} />
             <form className="row" onSubmit={form.handleSubmit}>
                 <div className="col-12 col-md-6 form-group">
                     <label className="fw-bold">Desde:</label>

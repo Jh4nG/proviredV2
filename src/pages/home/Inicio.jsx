@@ -2,9 +2,11 @@ import { useSelector } from "react-redux";
 import { obtenerVencimientos } from "../../services/audiencias";
 import { Alert, Table } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Inicio = () => {
     const userInfo = useSelector((state) => state.usuarioState);
+    const navigate = useNavigate();
     const { user } = userInfo;
     const [audiencias, setAudiencias] = useState([]);
     const columns = [
@@ -37,6 +39,14 @@ export const Inicio = () => {
         }
     };
 
+    const handelViewMore = () => {
+        try {
+            navigate("/mis-audiencias");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         if (userInfo.tipousuario == "S") {
             getVencimientos();
@@ -53,7 +63,12 @@ export const Inicio = () => {
                         dataSource={audiencias}
                         bordered
                     />
-                    <button className="btn btn__primary">Ver más</button>
+                    <button
+                        className="btn btn__primary"
+                        onClick={handelViewMore}
+                    >
+                        Ver más
+                    </button>
                 </>
             ) : (
                 <>
