@@ -5,23 +5,25 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
     eliminarAudiencia,
+    exportarAudiencia,
     obtenerAudiencias,
 } from "../../../services/audiencias";
 import { IconDelete, IconEdit } from "../../../components/Icons";
 import { NotificationComponent } from "../../../components/Notification/Notification";
+import { EditAudiencia } from "./Components/Edit";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { EditAudiencia } from "./Components/Edit";
+import { Loader } from "../../../components/Loader/Loader";
+import { convetirFecha, downloadFile, getDate } from "../../../helpers/form";
+import { messageAlertGeneric } from "../../../hooks/useMessage";
 
 export const AudienciasComponent = () => {
-    const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    const date = today.getDate();
-    const { user } = useSelector((state) => state.usuarioState);
+    const { user, data } = useSelector((state) => state.usuarioState);
+    const [showLoader, setShowLoader] = useState(false);
     const [audiencias, setAudiencias] = useState(null);
     const [showEdit, setShowEdit] = useState(false);
     const [msgAudiencias, setMsgAudiencias] = useState("");
+    const [dataEdit, setDataEdit] = useState();
     const [notification, setNotification] = useState({
         type: "",
         placement: "",
@@ -94,12 +96,17 @@ export const AudienciasComponent = () => {
             title: "Fecha",
             dataIndex: "fecha_vence_terminos",
             key: "fecha_vence_terminos",
+            width: "8%",
+            render: (_, record) =>
+                audiencias.length >= 1
+                    ? convetirFecha(record.fecha_vence_terminos)
+                    : null,
         },
     ];
     const objectForm = {
         username: user,
-        fi: `${year}-${month}-${date}`,
-        ff: `${year}-${month}-${date}`,
+        fi: `${getDate()}`,
+        ff: `${getDate()}`,
     };
 
     const validateForm = Yup.object().shape({
@@ -112,11 +119,13 @@ export const AudienciasComponent = () => {
         validationSchema: validateForm,
         onSubmit: async (values) => {
             try {
+                setShowLoader(true);
                 const resp = await obtenerAudiencias(values);
                 if (resp.status == 200) {
                     setAudiencias(resp.data);
                     setMsgAudiencias(resp?.msg);
                 }
+                setShowLoader(false);
             } catch (error) {}
         },
     });
@@ -146,13 +155,40 @@ export const AudienciasComponent = () => {
     };
 
     const handleEdit = (id) => {
-        console.log(id);
+        setDataEdit(audiencias.find((e) => e.id_vencimiento == id));
         setShowEdit(true);
+    };
+
+    const handleExportFile = async () => {
+        const dataSend = {
+            username: user,
+            fi: form.values.fi,
+            ff: form.values.ff,
+            name_user: data.nombre,
+            name_file: "Reporte_Audiencias",
+        };
+        setShowLoader(true);
+        const resp = await exportarAudiencia(dataSend);
+        if (resp.status == 200) {
+            downloadFile(resp.nameFile, resp.url);
+        } else {
+            messageAlertGeneric(resp);
+        }
+        setShowLoader(false);
     };
 
     return (
         <div className="col-12 justify-content">
-            <EditAudiencia show={showEdit} setShow={setShowEdit} />
+            {showLoader && <Loader show={showLoader} />}
+            {showEdit && (
+                <EditAudiencia
+                    user={user}
+                    data={dataEdit}
+                    show={showEdit}
+                    setShow={setShowEdit}
+                    refresh={form.handleSubmit}
+                />
+            )}
             <NotificationComponent resp={notification} />
             <form className="row" onSubmit={form.handleSubmit}>
                 <div className="col-12 col-md-6 form-group">
@@ -195,7 +231,10 @@ export const AudienciasComponent = () => {
                                     Total Registros Consultados:{" "}
                                     {audiencias.length}
                                 </p>
-                                <button className="btn btn__excel col-12 col-md-2 mb-2">
+                                <button
+                                    className="btn btn__excel col-12 col-md-2 mb-2"
+                                    onClick={handleExportFile}
+                                >
                                     <FileExcelOutlined /> Exportar excel
                                 </button>
                             </div>
